@@ -1,17 +1,47 @@
 <!-- hcaptcha.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Verify Human</title>
     <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
-    <script>
-      function onSubmit(token) {
-        HCaptcha.postMessage(token);
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
       }
 
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f9f9f9;
+      }
+
+      .h-captcha {
+        max-width: 100%;
+      }
+    </style>
+    <script>
+      function onSubmit(token) {
+        // Try both for different environments
+        if (window.flutter_inappwebview) {
+          window.flutter_inappwebview.callHandler('HCaptcha', token);
+        } else if (window.HCaptcha) {
+          window.HCaptcha.postMessage(token);
+        } else {
+          console.warn("Could not communicate with Flutter WebView.");
+        }
+      }
+
+      // fallback object for compatibility
       window.HCaptcha = {
-        postMessage: function(token) {
-          window.flutter_inappwebview?.callHandler('HCaptcha', token);
+        postMessage: function (token) {
+          if (window.flutter_inappwebview) {
+            window.flutter_inappwebview.callHandler('HCaptcha', token);
+          }
         }
       };
     </script>
@@ -24,3 +54,4 @@
     ></div>
   </body>
 </html>
+
