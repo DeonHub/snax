@@ -26,24 +26,18 @@
     </style>
     <script>
       function onSubmit(token) {
-        // Try both for different environments
-        if (window.flutter_inappwebview) {
-          window.flutter_inappwebview.callHandler('HCaptcha', token);
-        } else if (window.HCaptcha) {
-          window.HCaptcha.postMessage(token);
-        } else {
-          console.warn("Could not communicate with Flutter WebView.");
-        }
-      }
+    window.HCaptcha.postMessage(token);
+  }
 
-      // fallback object for compatibility
-      window.HCaptcha = {
-        postMessage: function (token) {
-          if (window.flutter_inappwebview) {
-            window.flutter_inappwebview.callHandler('HCaptcha', token);
-          }
-        }
-      };
+  window.HCaptcha = {
+    postMessage: function(token) {
+      if (window.HCaptchaChannel) {
+        window.HCaptchaChannel.postMessage(token);
+      } else {
+        window.postMessage(token, "*");
+      }
+    }
+  };
     </script>
   </head>
   <body>
