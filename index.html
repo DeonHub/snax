@@ -1,0 +1,26 @@
+<!-- hcaptcha.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <script>
+      function onSubmit(token) {
+        HCaptcha.postMessage(token);
+      }
+
+      window.HCaptcha = {
+        postMessage: function(token) {
+          window.flutter_inappwebview?.callHandler('HCaptcha', token);
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <div
+      class="h-captcha"
+      data-sitekey="e1e69902-418e-4f4c-ac18-d9eabe7af45e"
+      data-callback="onSubmit"
+    ></div>
+  </body>
+</html>
