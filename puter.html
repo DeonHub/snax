@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script src="https://js.puter.com/v2/"></script>
+<script>
+async function generate() {
+  const body = await fetch('', { method: 'POST' }).then(r => r.json());
+
+  const { text, articleId, callbackUrl } = body;
+
+  // Generate audio with Puter
+  const audio = await puter.ai.txt2speech(text);
+
+  // Send audio back to backend
+  await fetch(callbackUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      articleId,
+      audioBase64: audio.src
+    })
+  });
+}
+
+generate();
+</script>
+
+</body>
+</html>
